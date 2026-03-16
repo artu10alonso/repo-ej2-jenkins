@@ -1,0 +1,54 @@
+pipeline {
+
+    agent any      //si fuera mediante pod de Kb, se define junto a sus templates/contenedores
+
+    environment {
+        RANDOM_SLEEP_TIME = "${new Random().nextInt(4)}"
+    }
+
+    stages {
+
+        stage ('preparar entorno') {
+            steps {
+                echo "Preparando entorno..."
+                sleep time: 2, unit: 'SECONDS'
+                echo "Repo de GitHub clonado en ${env.WORKSPACE}"
+            }
+        }
+        stage ('Instalar dependencias') {
+            steps {
+                echo "Instalando dependencias"
+                sh 'cat requirements.txt'
+                time sleep: "${RANDOM_SLEEP_TIME}", unit: 'SECONDS'
+            }
+        }
+        stage ('Ejecutar pruebas'){
+            steps {
+                echo "Ejecutando pruebas..."
+                sh 'python3 test.py'
+                time sleep: 2, unit: 'SECONDS'
+                echo "Pruebas ejecutadas"
+            }
+        }
+        stage ('Despliegue') {
+            when {
+                branch 'production'
+            }
+            steps {
+                echo "Desplegando..."
+                sh 'python3 deploy.py'
+                echo "Desplegado"
+            }
+        }
+
+
+    }
+    post {
+        always {
+            echo "Haciendo limpieza de ${env.WORKSPACE}"
+            cleanWS()
+        }
+    }
+
+
+}
