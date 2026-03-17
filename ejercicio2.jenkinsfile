@@ -16,7 +16,7 @@ pipeline {
                 
                 // Listar archivos, usa el comando correcto según el sistema operativo
                 echo "Listando archivos: "
-                sh 'ls -lrt'  // Para Linux/MacOS
+                //sh 'ls -lrt'  // Para Linux/MacOS
                 // En Windows, usa: bat 'dir'
             }
         }
@@ -24,7 +24,7 @@ pipeline {
         stage ('Instalar dependencias') {
             steps {
                 echo "Instalando dependencias, mostrando contenido de 'requirements.txt'..."
-                sh 'cat requirements.txt' // Muestra el contenido
+                //sh 'cat requirements.txt' // Muestra el contenido
                 sleep time: Integer.parseInt(env.RANDOM_SLEEP_TIME), unit: 'SECONDS'
             }
         }
@@ -32,7 +32,7 @@ pipeline {
         stage ('Ejecutar pruebas') {
             steps {
                 echo "Ejecutando pruebas..."
-                sh 'python3 test.py' // En Linux/MacOS
+                //sh 'python3 test.py' // En Linux/MacOS
                 // En Windows, usa: bat 'python test.py'
                 sleep time: 2, unit: 'SECONDS'
                 echo "Pruebas ejecutadas exitosamente."
@@ -45,7 +45,7 @@ pipeline {
             }
             steps {
                 echo "Iniciando despliegue..."
-                sh 'python3 deploy.py' // En Linux/MacOS
+                //sh 'python3 deploy.py' // En Linux/MacOS
                 // En Windows, usa: bat 'python deploy.py'
                 echo "Despliegue completado."
             }
