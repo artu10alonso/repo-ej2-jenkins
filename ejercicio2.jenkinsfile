@@ -1,57 +1,62 @@
 pipeline {
 
-    agent any      //si fuera mediante pod de Kb, se define junto a sus templates/contenedores
+    agent any // Si fuera mediante pod de Kubernetes, se define junto a sus templates/contenedores
 
     environment {
-        RANDOM_SLEEP_TIME = "${new Random().nextInt(4)}"
+        RANDOM_SLEEP_TIME = "${new Random().nextInt(4)}" // Número aleatorio para el tiempo de pausa
     }
 
     stages {
 
-        stage ('preparar entorno') {
+        stage ('Preparar entorno') {
             steps {
                 echo "Preparando entorno..."
                 sleep time: 2, unit: 'SECONDS'
-                echo "Repo de GitHub clonado en ${env.WORKSPACE}"
-                echo "Listando files: "
-                sh 'ls -lrt'
+                echo "Repositorio GitHub clonado en ${env.WORKSPACE}"
+                
+                // Listar archivos, usa el comando correcto según el sistema operativo
+                echo "Listando archivos: "
+                sh 'ls -lrt'  // Para Linux/MacOS
+                // En Windows, usa: bat 'dir'
             }
-
         }
+
         stage ('Instalar dependencias') {
             steps {
-                echo "Instalando dependencias, mostrando cat"
-                sh 'cat requirements.txt'
-                sleep time: "${RANDOM_SLEEP_TIME}", unit: 'SECONDS'
+                echo "Instalando dependencias, mostrando contenido de 'requirements.txt'..."
+                sh 'cat requirements.txt' // Muestra el contenido
+                sleep time: Integer.parseInt(env.RANDOM_SLEEP_TIME), unit: 'SECONDS'
             }
         }
-        stage ('Ejecutar pruebas'){
+
+        stage ('Ejecutar pruebas') {
             steps {
                 echo "Ejecutando pruebas..."
-                sh 'python3 test.py'
+                sh 'python3 test.py' // En Linux/MacOS
+                // En Windows, usa: bat 'python test.py'
                 sleep time: 2, unit: 'SECONDS'
-                echo "Pruebas ejecutadas"
+                echo "Pruebas ejecutadas exitosamente."
             }
         }
+
         stage ('Despliegue') {
             when {
-                branch 'production'
+                branch 'production' // Ejecutar solo si la rama es "production"
             }
             steps {
-                echo "Desplegando..."
-                sh 'python3 deploy.py'
-                echo "Desplegado"
+                echo "Iniciando despliegue..."
+                sh 'python3 deploy.py' // En Linux/MacOS
+                // En Windows, usa: bat 'python deploy.py'
+                echo "Despliegue completado."
             }
         }
-
-
     }
+
     post {
         always {
-            echo "Haciendo limpieza de ${env.WORKSPACE}"
-            cleanWs()
+            echo "Haciendo limpieza del directorio de trabajo: ${env.WORKSPACE}"
+            cleanWs() // Limpia el espacio de trabajo después de cada ejecución
         }
     }
-
 
 }
