@@ -14,10 +14,14 @@ pipeline {
                 sleep time: 2, unit: 'SECONDS'
                 echo "Repo de GitHub clonado en ${env.WORKSPACE}"
             }
+            steps {
+                echo "Listando files: "
+                sh 'ls -lrt'    // En Windowss
+            }
         }
         stage ('Instalar dependencias') {
             steps {
-                echo "Instalando dependencias"
+                echo "Instalando dependencias, mostrando cat"
                 sh 'cat requirements.txt'
                 time sleep: "${RANDOM_SLEEP_TIME}", unit: 'SECONDS'
             }
@@ -46,7 +50,7 @@ pipeline {
     post {
         always {
             echo "Haciendo limpieza de ${env.WORKSPACE}"
-            cleanWS()
+            cleanWs()
         }
     }
 
