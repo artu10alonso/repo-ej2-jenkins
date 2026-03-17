@@ -13,11 +13,9 @@ pipeline {
                 echo "Preparando entorno..."
                 sleep time: 2, unit: 'SECONDS'
                 echo "Repo de GitHub clonado en ${env.WORKSPACE}"
-            }
-            steps {
                 echo "Listando files: "
                 sh 'ls -lrt'    // En Windowss
-            }
+
         }
         stage ('Instalar dependencias') {
             steps {
