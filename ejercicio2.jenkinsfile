@@ -14,21 +14,22 @@ pipeline {
                 sleep time: 2, unit: 'SECONDS'
                 echo "Repo de GitHub clonado en ${env.WORKSPACE}"
                 echo "Listando files: "
-                sh 'ls -lrt'    // En Windowss
+                sh 'ls -lrt'
+            }
 
         }
         stage ('Instalar dependencias') {
             steps {
                 echo "Instalando dependencias, mostrando cat"
                 sh 'cat requirements.txt'
-                time sleep: "${RANDOM_SLEEP_TIME}", unit: 'SECONDS'
+                sleep time: "${RANDOM_SLEEP_TIME}", unit: 'SECONDS'
             }
         }
         stage ('Ejecutar pruebas'){
             steps {
                 echo "Ejecutando pruebas..."
                 sh 'python3 test.py'
-                time sleep: 2, unit: 'SECONDS'
+                sleep time: 2, unit: 'SECONDS'
                 echo "Pruebas ejecutadas"
             }
         }
